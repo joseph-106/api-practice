@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import MsgItem from "./MsgItem";
+import MsgInput from "./MsgInput";
 
 const MsgList = () => {
   const [msgs, setMsgs] = useState([]);
@@ -21,12 +22,25 @@ const MsgList = () => {
     );
   }, []);
 
+  const onCreate = (text) => {
+    const newMsg = {
+      id: msgs.length + 1,
+      userId: getRandomUserId(),
+      timestamp: Date.now(),
+      text: `${msgs.length + 1} ${text}`,
+    };
+    setMsgs((msgs) => [newMsg, ...msgs]);
+  };
+
   return (
-    <ul className="messages">
-      {msgs.map((msg) => (
-        <MsgItem key={msg.id} {...msg} />
-      ))}
-    </ul>
+    <>
+      <MsgInput mutate={onCreate} />
+      <ul className="messages">
+        {msgs.map((msg) => (
+          <MsgItem key={msg.id} {...msg} />
+        ))}
+      </ul>
+    </>
   );
 };
 
