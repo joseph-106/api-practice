@@ -5,11 +5,11 @@ import MsgInput from "./MsgInput";
 import fetcher from "../fetcher";
 import useInfiniteScroll from "../hooks/useInfiniteScroll";
 
-const MsgList = () => {
+const MsgList = ({ smsgs, susers }) => {
   const {
     query: { userId = "" },
   } = useRouter();
-  const [msgs, setMsgs] = useState([]);
+  const [msgs, setMsgs] = useState(smsgs);
   const [editingId, setEditingId] = useState(null);
   // 무한 스크롤
   const [hasNext, setHasNext] = useState(true);
@@ -80,6 +80,7 @@ const MsgList = () => {
             isEditing={editingId === msg.id}
             onDelete={() => onDelete(msg.id)}
             myId={userId}
+            user={susers[msg.userId]}
           />
         ))}
       </ul>
