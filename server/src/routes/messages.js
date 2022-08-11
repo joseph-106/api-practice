@@ -1,8 +1,11 @@
 import { v4 } from "uuid";
-import { readDB, writeDB } from "../dbController.js";
+import db from "../dbController.js";
 
-const getMsgs = () => readDB("messages");
-const setMsgs = (data) => writeDB("messages", data);
+const getMsgs = () => {
+  db.read();
+  db.data = db.data || { messages: [] };
+  return db.data.messages;
+};
 
 const messagesRoute = [
   {
@@ -35,16 +38,21 @@ const messagesRoute = [
     method: "post",
     route: "/messages",
     handler: ({ body }, res) => {
-      const msgs = getMsgs();
-      const newMsg = {
-        id: v4(),
-        text: body.text,
-        userId: body.userId,
-        timestamp: Date.now(),
-      };
-      msgs.unshift(newMsg);
-      setMsgs(msgs);
-      res.send(newMsg);
+      try {
+        if (!body.userId) throw Error("no userId");
+        const msgs = getMsgs();
+        const newMsg = {
+          id: v4(),
+          text: body.text,
+          userId: body.userId,
+          timestamp: Date.now(),
+        };
+        db.data.messages.unshift(newMsg);
+        db.write();
+        res.send(newMsg);
+      } catch (err) {
+        res.status(500).send({ error: err });
+      }
     },
   },
   {
@@ -58,9 +66,10 @@ const messagesRoute = [
         if (targetIndex < 0) throw "메시지가 없습니다.";
         if (msgs[targetIndex].userId !== body.userId)
           throw "사용자가 다릅니다.";
+
         const newMsg = { ...msgs[targetIndex], text: body.text };
-        msgs.splice(targetIndex, 1, newMsg);
-        setMsgs(msgs);
+        db.data.messages.splice(targetIndex, 1, newMsg);
+        db.write();
         res.send(newMsg);
       } catch (err) {
         res.status(500).send({ error: err });
@@ -77,8 +86,9 @@ const messagesRoute = [
         const targetIndex = msgs.findIndex((msg) => msg.id === id);
         if (targetIndex < 0) throw "메시지가 없습니다.";
         if (msgs[targetIndex].userId !== userId) throw "사용자가 다릅니다.";
-        msgs.splice(targetIndex, 1);
-        setMsgs(msgs);
+
+        db.data.messages.splice(targetIndex, 1);
+        db.write();
         res.send(id);
       } catch (err) {
         res.status(500).send({ error: err });
