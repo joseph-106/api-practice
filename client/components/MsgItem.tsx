@@ -1,16 +1,26 @@
 import MsgInput from "./MsgInput";
+import { IUser } from "../types";
 
 const MsgItem = ({
   id,
-  userId,
   timestamp,
   text,
-  onUpdate,
   isEditing,
-  startEdit,
-  onDelete,
   myId,
   user,
+  onUpdate,
+  onDelete,
+  startEdit,
+}: {
+  id: string;
+  timestamp: number;
+  text: string;
+  isEditing: boolean;
+  myId: string;
+  user: IUser;
+  onUpdate: (text: string, id?: string) => void;
+  onDelete: () => void;
+  startEdit: () => void;
 }) => {
   return (
     <li className="messages__item">
@@ -32,7 +42,7 @@ const MsgItem = ({
       ) : (
         text
       )}
-      {myId === userId && (
+      {myId === user.id && (
         <div className="messages__buttons">
           <button onClick={startEdit}>수정</button>
           <button onClick={onDelete}>삭제</button>

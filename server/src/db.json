@@ -1,16 +1,16 @@
 {
   "messages": [
     {
+      "id": "a59d1312-f70a-48e1-a511-4f6f4a491b99",
+      "text": "TS 테스트",
+      "userId": "roy",
+      "timestamp": 1660546917235
+    },
+    {
       "id": "be39cc1d-1002-4802-b655-232ab5ec75cc",
       "text": "LowDB 테스트",
       "userId": "roy",
       "timestamp": 1660200452241
-    },
-    {
-      "id": "66749055-71da-4b67-a201-bd4a773b96b8",
-      "text": "테스트",
-      "userId": "roy",
-      "timestamp": 1660117418284
     },
     {
       "id": "640bdbfd-2600-4a12-b748-233a9e9a77e6",
